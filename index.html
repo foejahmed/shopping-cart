@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+  <html>
+  
+  <head>
+     <title>Shopping Cart</title>
+     <meta charset="utf-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.css" rel="stylesheet" />
+     <link href="style.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <section>
+        <div class="container">
+            <div class="cart">
+                <div class="col-md-12 col-lg-10 mx-auto">
+                    <div class="cart-item">
+                        <div class="row">
+                            <div class="col-md-7 center-item">
+                                <img src="images/product-1.png" alt="" />
+                                <h5>iPhone 11 128GB Black</h5>
+                            </div>
+
+                            <div class="col-md-5 center-item">
+                                <div class="input-group number-spinner">
+                                    <button id="minusBtn" class="btn btn-default">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                    <input id="quantity" type="text" class="form-control text-center" value="1" disabled/>
+                                    <button id="plusBtn" class="btn btn-default">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <h5>$<span id="mobilePrice">1219</span></h5>
+                                <img id="deleteBtn" src="images/remove.png" alt="" class="remove-item" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="row">
+                            <div class="col-md-7 center-item mx-auto">
+                                <img src="images/product-2.png" alt="" />
+                                <h5>iPhone 11 Silicone Case - Black</h5>
+                            </div>
+                            <div class="col-md-5 center-item">
+                                <div class="input-group number-spinner">
+                                    <button id="minusBtn2" class="btn btn-default">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+
+                                    <input id="quantity-2" type="text" class="form-control text-center" value="1" disabled/>
+                                    <button id="plusBtn2" class="btn btn-default">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                <h5>$<span id="backCoverPrice">59</span></h5>
+                                <img id="deleteBtn2" src="images/remove.png" alt="" class="remove-item" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cart-item">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <h5>Subtotal:</h5>
+                                <h5>Tax (5%):</h5>
+                                <h5>Total:</h5>
+                            </div>
+
+                            <div class="col-md-4 status">
+                                <h5>$<span id="subtotal">1278</span></h5>
+                                <h5>$<span id="tax">63</span></h5>
+                                <h5>$<span id="total">1341</span></h5>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 pt-4 pb-4">
+                        <button id="checkout" type="button" class="btn btn-success check-out">Check Out</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+  
+
+   
+
+    <script>
+        const initialMobilePrice = parseInt(document.getElementById("mobilePrice").innerText);
+        const initialBackcoverPrice = parseInt(document.getElementById("backCoverPrice").innerText);
+        const taxRate = 0.05;
+
+        // Plus Button 
+                document.getElementById("plusBtn").addEventListener("click", () => {
+                    incrementNumber("quantity");
+                    updatePrice("quantity", "mobilePrice", initialMobilePrice);
+                    updateTotal();
+                });
+
+        // Minus Button 
+                document.getElementById("minusBtn").addEventListener("click", () => {
+                    decrementNumber("quantity");
+                    updatePrice("quantity", "mobilePrice", initialMobilePrice);
+                    updateTotal();
+                });
+
+        // Delete Button
+                document.getElementById("deleteBtn").addEventListener("click", () => {
+
+                    document.getElementsByClassName("cart-item")[0].style.display = "none";
+
+                    document.getElementById("mobilePrice").innerText = 0;
+                    updateTotal();
+                });
+
+        // plus Button2 
+                document.getElementById("plusBtn2").addEventListener("click", () => {
+                    incrementNumber("quantity-2");
+                    updatePrice("quantity-2", "backCoverPrice", initialBackcoverPrice);
+
+                    // Update price for subtotal, vat and total
+                    updateTotal();
+                });
+
+        // Minus Button2 
+        document.getElementById("minusBtn2").addEventListener("click", () => {
+                    decrementNumber("quantity-2");
+                    updatePrice("quantity-2", "backCoverPrice", initialBackcoverPrice);
+
+                    updateTotal();
+                });
+
+        // Delete Button2
+                document.getElementById("deleteBtn2").addEventListener("click", () => {
+                    
+                    document.getElementsByClassName("cart-item")[1].style.display = "none";
+
+                    document.getElementById("backCoverPrice").innerText = 0;
+                    updateTotal();
+                });
+
+        //Functions
+                function getNumber(id) {
+                    return parseInt(document.getElementById(id).value);
+                }
+
+                function incrementNumber(id) {
+                    document.getElementById(id).value = getNumber(id) + 1;
+                }
+
+                function decrementNumber(id) {
+                    if (getNumber(id) - 1 > 0) {
+                        document.getElementById(id).value = getNumber(id) - 1;
+                    }
+                }
+
+                function updatePrice(quantityId, priceId, initialPrice) {
+                    document.getElementById(priceId).innerText = getNumber(quantityId) * initialPrice;
+                }
+
+
+                function updateTotal() {
+                    let mobilePrice = parseInt(document.getElementById("mobilePrice").innerText);
+                    let backCoverPrice = parseInt(document.getElementById("backCoverPrice").innerText);
+
+                    let tax = Math.floor((mobilePrice + backCoverPrice) * taxRate);
+
+                    document.getElementById("subtotal").innerText = mobilePrice + backCoverPrice;
+                    document.getElementById("tax").innerText = tax;
+                    document.getElementById("total").innerText = mobilePrice + backCoverPrice + tax;
+        }
+    </script>
+</body>
+</html>
